@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class ProjectileCollision : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         //uhhhh
-        Debug.Log("Trigger");
-        Destroy(this);
+        if (other.CompareTag("Player")){
+            return;
+        }
+        Debug.Log("Bullet collided with " + other.name);
+        Destroy(gameObject, 0f);
     }
 }
