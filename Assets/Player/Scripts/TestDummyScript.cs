@@ -11,6 +11,14 @@ public class TestDummyScript : MonoBehaviour, IDamageable, IKillable
         hp = 1000;
     }
 
+    void FixedUpdate()
+    {
+        //look for player
+
+        // turn towards player
+        // fire at player
+    }
+
     public void Damage(float damage)
     {
         hp -= damage;

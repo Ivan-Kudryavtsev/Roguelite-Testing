@@ -12,14 +12,14 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private float bulletForce;
     [SerializeField] private Camera cam;
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private int fireCD;
     private Rigidbody2D rb;
     private Transform firePoint;
     private bool isFiring;
-    [SerializeField] private int fireCD;
 
     void Awake()
     {
-        movement = new Vector3(0, 0);
+        movement = new Vector2(0, 0);
         rb = GetComponent<Rigidbody2D>();
         firePoint = transform.Find("FirePoint");
         isFiring = false;
