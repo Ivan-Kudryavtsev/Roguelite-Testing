@@ -6,18 +6,23 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private Vector2 movement;
     private Vector2 mousePos;
+    [SerializeField] private float blowbackForce;
+    [SerializeField] private int bufferFrames;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float bulletForce;
     [SerializeField] private Camera cam;
     [SerializeField] private GameObject projectilePrefab;
     private Rigidbody2D rb;
     private Transform firePoint;
+    private bool isFiring;
+    [SerializeField] private int fireCD;
 
     void Awake()
     {
         movement = new Vector3(0, 0);
         rb = GetComponent<Rigidbody2D>();
         firePoint = transform.Find("FirePoint");
+        isFiring = false;
     }
     // Update is called once per frame
     void Update()
@@ -27,9 +32,12 @@ public class PlayerInputHandler : MonoBehaviour
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1"))
         {
-            Shoot();
+            if (!isFiring)
+            {
+                isFiring = true;
+            }
         }
     }
 
@@ -40,12 +48,27 @@ public class PlayerInputHandler : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
+        fireCD += 1;
+        if (isFiring)
+        {   
+            if (fireCD >= bufferFrames)
+            {
+                Shoot(rb);
+                fireCD = 0;
+            }
+            isFiring = !isFiring;
+        }
     }
 
-    void Shoot()
+    void Shoot(Rigidbody2D body)
     {
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        Vector2 bulletDir = (mousePos - (new Vector2(firePoint.position.x, firePoint.position.y)));
+        bulletDir.Normalize();
         Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
-        prb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+        prb.velocity = new Vector2(0f, 0f);
+        prb.AddForce(bulletDir * bulletForce, ForceMode2D.Impulse);
+        body.AddForce(-1 * bulletDir * bulletForce * blowbackForce, ForceMode2D.Force);
+
     }
 }

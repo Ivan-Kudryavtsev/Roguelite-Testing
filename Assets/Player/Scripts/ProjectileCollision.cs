@@ -13,6 +13,10 @@ public class ProjectileCollision : MonoBehaviour
         if (other.CompareTag("Player")){
             return;
         }
+        if (other.CompareTag("Projectile"))
+        {
+            return;
+        }
         if (other.CompareTag("Enemy"))
         {
             var found = other.transform.gameObject.TryGetComponent<IDamageable>(out IDamageable stat);
