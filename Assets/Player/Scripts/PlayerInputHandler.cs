@@ -17,6 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
     //private Transform firePoint;
     private bool isFiring;
     [SerializeField] private GameObject gunPrefab;
+    [SerializeField] private GameObject emptyGunPrefab;
     [SerializeField] private GameObject gun;
     private Transform gunPoint;
     private Weapon gunComponent = null;
@@ -28,6 +29,12 @@ public class PlayerInputHandler : MonoBehaviour
         //firePoint = transform.Find("FirePoint");
         gunPoint = transform.Find("GunPoint");
         isFiring = false;
+        if (gun == null)
+        {
+            gun = Instantiate(gunPrefab, gunPoint.position, Quaternion.identity);
+            gun.transform.SetParent(this.transform);
+            SetGun(gun);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -44,21 +51,40 @@ public class PlayerInputHandler : MonoBehaviour
                 isFiring = true;
             }
         }
+        if (Input.GetKey(KeyCode.G) && gun != null)
+        {
+            DropGun();
+        }
+        if (Input.GetKey(KeyCode.K) && gun == null)
+        {
+            Debug.Log("I");
+            CreateGun(gunPrefab);
+        }
     }
 
-    void SetGun()
+    void CreateGun(GameObject prefab)
     {
-        gunComponent = gun.GetComponent<Weapon>();
+        Debug.Log("II");
+        gun = Instantiate(prefab, gunPoint.position, this.transform.rotation);
+        gun.transform.SetParent(this.transform);
+        SetGun(gun);
     }
 
-    void FixedUpdate()
-    {   
+    void SetGun(GameObject gun)
+    {
         if (gun == null)
         {
-            gun = Instantiate(gunPrefab, gunPoint.position, Quaternion.identity);
-            gun.transform.SetParent(this.transform);
-            SetGun();
+            Debug.Log("III");
+            gunComponent = null;
         }
+        else
+        {   
+            gunComponent = gun.GetComponent<Weapon>();
+        }
+    }
+        void FixedUpdate()
+    {   
+        
         rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);
 
         Vector2 lookDir = mousePos - rb.position;
@@ -85,11 +111,23 @@ public class PlayerInputHandler : MonoBehaviour
         prb.velocity = new Vector2(0f, 0f);
         prb.AddForce(bulletDir * bulletForce, ForceMode2D.Impulse);
         body.AddForce(-1 * bulletDir * bulletForce * blowbackForce, ForceMode2D.Force);*/
-        gunComponent.Shoot(mousePos);
+        Debug.Log(gun.name);
+        Debug.Log(gunComponent.name);
+        if (gun != null)
+        {
+            gunComponent.Shoot(mousePos);
+        }
     }
 
     void PickupGun()
     {
         //i wonder how?
+    }
+
+    void DropGun()
+    {
+        gun.transform.parent = null;
+        this.gun = null;
+        SetGun(null);
     }
 }
