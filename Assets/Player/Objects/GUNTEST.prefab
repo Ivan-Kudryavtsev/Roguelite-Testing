@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 5321882563246741153}
   - component: {fileID: 2021978741032254986}
   - component: {fileID: 3146787196300981826}
-  m_Layer: 0
+  - component: {fileID: -6975005222770581307}
+  m_Layer: 3
   m_Name: GUNTEST
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,6 +102,32 @@ MonoBehaviour:
   damage: 20
   bulletForce: 10
   projectilePrefab: {fileID: 977328146453920686, guid: e6563b67659c25143aaffb0d350ac435, type: 3}
+--- !u!61 &-6975005222770581307
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325500130638845984}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 2}
+    newSize: {x: 1, y: 2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2}
+  m_EdgeRadius: 0
 --- !u!1 &4304455823424956560
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 348023371039702487}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GunFirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
