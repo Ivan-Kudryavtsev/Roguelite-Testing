@@ -59,7 +59,7 @@ public class PlayerInputHandler : MonoBehaviour
                 isFiring = true;
             }
         }
-        if (Input.GetButton("Fire2"))
+        if (Input.GetButtonDown("Fire2"))
         {
             Dash();
         }
@@ -141,12 +141,21 @@ public class PlayerInputHandler : MonoBehaviour
     {
         //raycast in direction
         RaycastHit2D[] hit = Physics2D.RaycastAll(rb.position, mousePos - rb.position, dashDistance, dashLayerMask);
+        float travelDist = dashDistance;
         foreach (RaycastHit2D ray in hit) {
             if (ray.collider != null)
             {
                 Debug.Log("HIT" + ray.transform.gameObject.name);
+                if (ray.transform.gameObject.layer == LayerMask.NameToLayer("Terrain"))
+                {
+                    travelDist = ray.distance;
+                    break;
+                }
             }
         }
+        Vector2 addVector = (mousePos - rb.position);
+        addVector.Normalize();
+        rb.position = rb.position + travelDist * addVector;
         //create dummy object at location,,,
         //check if 
     }
