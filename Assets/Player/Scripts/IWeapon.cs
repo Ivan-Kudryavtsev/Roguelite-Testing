@@ -5,4 +5,6 @@ using UnityEngine;
 interface IWeapon
 {   
     void Shoot(Vector2 mousePos);
+    void Shoot();
+
 }

@@ -9,10 +9,13 @@ public abstract class Weapon : MonoBehaviour, IWeapon
     [SerializeField] public float fireRate;
     [SerializeField] public float fireCD;
     [SerializeField] protected GameObject projectilePrefab;
+    [SerializeField] protected int hitLayer;
     protected Transform firePoint;
 
     protected Weapon()
     {    }
+
+    
 
     protected Weapon(GameObject obj, float dmg)
     {
@@ -21,4 +24,10 @@ public abstract class Weapon : MonoBehaviour, IWeapon
     }
 
     public abstract void Shoot(Vector2 mousePos);
+    public abstract void Shoot();
+    public void SetLayer(int layer)
+    {
+        hitLayer = layer;
+    }
+
 }

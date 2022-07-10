@@ -25,10 +25,12 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private GameObject gun;
     private Transform gunPoint;
     private Weapon gunComponent = null;
+    private int enemyLayer;
 
     void Awake()
     {
         movement = new Vector2(0, 0);
+        enemyLayer = LayerMask.NameToLayer("Enemy");
         rb = GetComponent<Rigidbody2D>();
         //firePoint = transform.Find("FirePoint");
         gunPoint = transform.Find("GunPoint");
@@ -39,9 +41,10 @@ public class PlayerInputHandler : MonoBehaviour
             //gun.transform.SetParent(this.transform);
             SetGun(gun);
         }
-        int enemy = 1 << LayerMask.NameToLayer("Enemy");
         int terrain = 1 << LayerMask.NameToLayer("Terrain");
+        int enemy = 1 << LayerMask.NameToLayer("Enemy");
         dashLayerMask = enemy | terrain;
+        Debug.Log("pLayer" + this.transform.gameObject.layer);
     }
     // Update is called once per frame
     void Update()
@@ -98,8 +101,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     void Shoot(Rigidbody2D body)
     {
-        Debug.Log(gun.name);
-        Debug.Log(gunComponent.name);
+        //Debug.Log(gun.name);
+        //Debug.Log(gunComponent.name);
         if (gun != null)
         {
             gunComponent.Shoot(mousePos);
@@ -178,6 +181,7 @@ public class PlayerInputHandler : MonoBehaviour
             //gun collider needs to be off
             gun.GetComponent<BoxCollider2D>().enabled = false;
             gunComponent = gun.GetComponent<Weapon>();
+            gunComponent.SetLayer(enemyLayer);
         }
     }
 }

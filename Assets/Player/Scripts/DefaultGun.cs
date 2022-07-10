@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DefaultGun : Weapon
 {
+
     void Awake()
     {
         firePoint = transform.Find("GunFirePoint").transform;
@@ -28,10 +29,30 @@ public class DefaultGun : Weapon
         Vector2 bulletDir = (mousePos - (new Vector2(firePoint.position.x, firePoint.position.y)));
         bulletDir.Normalize();
 
-
-        projectile.GetComponent<IProjectile>().SetDamage(damage);
+        IProjectile projScript = projectile.GetComponent<IProjectile>();
+        projScript.SetDamage(damage);
+        projScript.SetLayer(hitLayer);
         Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
         prb.velocity = new Vector2(0f, 0f);
         prb.AddForce(bulletDir * bulletForce, ForceMode2D.Impulse);
+    }
+
+    public override void Shoot()
+    {
+        if (fireCD < fireRate)
+        {
+            //Debug.Log("!!!!!!");
+            return;
+        }
+        //Debug.Log("}}}}}}}}}}");
+        fireCD = 0f;
+
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        IProjectile projScript = projectile.GetComponent<IProjectile>();
+        projScript.SetDamage(damage);
+        projScript.SetLayer(hitLayer);
+        Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
+        prb.velocity = new Vector2(0f, 0f);
+        prb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
     }
 }
