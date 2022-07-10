@@ -9,7 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 86546445952757729, guid: 0e00961f050f16d47bc1b24f918507a4, type: 3}
       propertyPath: m_Name
-      value: Wall (2)
+      value: Horizontal Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 86546445952757729, guid: 0e00961f050f16d47bc1b24f918507a4, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 86546445952757731, guid: 0e00961f050f16d47bc1b24f918507a4, type: 3}
       propertyPath: m_RootOrder

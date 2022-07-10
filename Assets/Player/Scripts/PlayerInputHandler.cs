@@ -6,7 +6,7 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private Vector2 movement;
     private Vector2 mousePos;
-    
+    [SerializeField] private float dashDistance;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float mouseRadius;
     [SerializeField] private float pickupRadius;
@@ -15,7 +15,7 @@ public class PlayerInputHandler : MonoBehaviour
     //[SerializeField] private GameObject projectilePrefab;
     [SerializeField] private int fireCD;
     [SerializeField] private SelectionManager selectionManager;
-
+    private LayerMask dashLayerMask;
     private Rigidbody2D rb;
     private Transform firePoint;
     private bool isFiring;
@@ -39,6 +39,9 @@ public class PlayerInputHandler : MonoBehaviour
             //gun.transform.SetParent(this.transform);
             SetGun(gun);
         }
+        int enemy = 1 << LayerMask.NameToLayer("Enemy");
+        int terrain = 1 << LayerMask.NameToLayer("Terrain");
+        dashLayerMask = enemy | terrain;
     }
     // Update is called once per frame
     void Update()
@@ -55,6 +58,10 @@ public class PlayerInputHandler : MonoBehaviour
             {
                 isFiring = true;
             }
+        }
+        if (Input.GetButton("Fire2"))
+        {
+            Dash();
         }
         if (Input.GetKey(KeyCode.G) && gun != null)
         {
@@ -128,6 +135,20 @@ public class PlayerInputHandler : MonoBehaviour
     {
         GameObject tempgun = Instantiate(prefab, gunPoint.position, this.transform.rotation);
         SetGun(tempgun);
+    }
+
+    void Dash()
+    {
+        //raycast in direction
+        RaycastHit2D[] hit = Physics2D.RaycastAll(rb.position, mousePos - rb.position, dashDistance, dashLayerMask);
+        foreach (RaycastHit2D ray in hit) {
+            if (ray.collider != null)
+            {
+                Debug.Log("HIT" + ray.transform.gameObject.name);
+            }
+        }
+        //create dummy object at location,,,
+        //check if 
     }
 
     void SetGun(GameObject gun)
