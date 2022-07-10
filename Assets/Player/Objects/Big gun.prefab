@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3146787196300981826}
   - component: {fileID: -6975005222770581307}
   m_Layer: 6
-  m_Name: GUNTEST
+  m_Name: Big gun
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2cd609b00cdd941aaa915d1f90df61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
-  bulletForce: 10
-  fireRate: 4
+  damage: 200
+  bulletForce: 20
+  fireRate: 20
   fireCD: 0
   projectilePrefab: {fileID: 977328146453920686, guid: e6563b67659c25143aaffb0d350ac435, type: 3}
 --- !u!61 &-6975005222770581307

@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileCollision : MonoBehaviour
+public class ProjectileCollision : MonoBehaviour, IProjectile
 {
 
     [SerializeField] private float damage;
+    public void SetDamage(float dmg)
+    {
+        damage = dmg;
+    }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         //uhhhh
         if (other.CompareTag("Player")){

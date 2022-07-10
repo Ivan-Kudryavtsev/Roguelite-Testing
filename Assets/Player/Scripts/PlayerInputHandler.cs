@@ -6,8 +6,7 @@ public class PlayerInputHandler : MonoBehaviour
 {
     private Vector2 movement;
     private Vector2 mousePos;
-    [SerializeField] private float blowbackForce;
-    [SerializeField] private int bufferFrames;
+    
     [SerializeField] private float moveSpeed;
     [SerializeField] private float mouseRadius;
     [SerializeField] private float pickupRadius;
@@ -15,15 +14,17 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private Camera cam;
     //[SerializeField] private GameObject projectilePrefab;
     [SerializeField] private int fireCD;
+    [SerializeField] private SelectionManager selectionManager;
+
     private Rigidbody2D rb;
-    //private Transform firePoint;
+    private Transform firePoint;
     private bool isFiring;
+    [SerializeField] private float blowbackForce;
+    [SerializeField] private int bufferFrames;
     [SerializeField] private GameObject gunPrefab;
-    [SerializeField] private GameObject emptyGunPrefab;
     [SerializeField] private GameObject gun;
     private Transform gunPoint;
     private Weapon gunComponent = null;
-    private PositionComparer posComp = new PositionComparer();
 
     void Awake()
     {
@@ -49,6 +50,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (Input.GetButton("Fire1"))
         {
+            //redundant?
             if (!isFiring)
             {
                 isFiring = true;
@@ -71,6 +73,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
     
+
         void FixedUpdate()
     {   
         
@@ -79,27 +82,15 @@ public class PlayerInputHandler : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
-        fireCD += 1;
         if (isFiring)
-        {   
-            if (fireCD >= bufferFrames)
-            {
-                Shoot(rb);
-                fireCD = 0;
-            }
-            isFiring = !isFiring;
+        {
+            Shoot(rb);
+            isFiring = false;
         }
     }
 
     void Shoot(Rigidbody2D body)
     {
-        /*GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Vector2 bulletDir = (mousePos - (new Vector2(firePoint.position.x, firePoint.position.y)));
-        bulletDir.Normalize();
-        Rigidbody2D prb = projectile.GetComponent<Rigidbody2D>();
-        prb.velocity = new Vector2(0f, 0f);
-        prb.AddForce(bulletDir * bulletForce, ForceMode2D.Impulse);
-        body.AddForce(-1 * bulletDir * bulletForce * blowbackForce, ForceMode2D.Force);*/
         Debug.Log(gun.name);
         Debug.Log(gunComponent.name);
         if (gun != null)
@@ -108,45 +99,34 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
+
     void PickupGun()
     {
-        //i wonder how?
-        posComp.SetPosition(mousePos);
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(mousePos, mouseRadius);
-        List<Collider2D> weapons = new List<Collider2D>();
-        // why am i adding colliders instead of the actual gameObjects???
-        foreach (Collider2D col in colliders) {
-            Debug.Log("Collider " + col.gameObject.name);
-            if (col.gameObject.TryGetComponent<Weapon>(out Weapon stat) && col.transform.parent == null)
-            {
-                Debug.Log("Picking UP " + col.gameObject.name);
-                weapons.Add(col);
-            }
+        //Debug.Log("MOUSE DISTANCE" + Vector2.Distance(mousePos, rb.position));
+        if (Vector2.Distance(mousePos,rb.position) > pickupRadius)
+        {
+            return;
         }
-        weapons.Sort(posComp);
-        //Debug.Log("HERE");
-        Debug.Log("CHOSE " + weapons[0].gameObject.name);
-        //Debug.Log("THERE");*/
-        DropGun();
-        //Destroy(weapons[0].gameObject, 0f);
-        SetGun(weapons[0].gameObject);
-        // get distance of weapon from mousepos
-        // get closest weapon and pcik up
+        Transform potentialGun = selectionManager.GetSelection();
+
+        if (potentialGun.gameObject.TryGetComponent<Weapon>(out Weapon stat) && potentialGun.transform.parent == null)
+        {
+            Debug.Log("Picking UP " + potentialGun.gameObject.name);
+            DropGun();
+            SetGun(potentialGun.gameObject);
+        }
     }
 
     void DropGun()
     {
         gun.transform.parent = null;
         gun.GetComponent<BoxCollider2D>().enabled = true;
-        //this.gun = null;
         SetGun(null);
     }
 
     void CreateGun(GameObject prefab)
     {
-        Debug.Log("II");
         GameObject tempgun = Instantiate(prefab, gunPoint.position, this.transform.rotation);
-        //gun.transform.SetParent(this.transform);
         SetGun(tempgun);
     }
 
